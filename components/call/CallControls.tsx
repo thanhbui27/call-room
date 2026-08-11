@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, CameraOff, Expand, Hand, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, PhoneOff, Settings, StopCircle } from "lucide-react";
+import { Camera, CameraOff, Expand, Hand, MessageSquare, Mic, MicOff, MonitorUp, MoreHorizontal, PhoneOff, PictureInPicture2, Settings, StopCircle } from "lucide-react";
 import { useState } from "react";
 
 interface CallControlsProps {
@@ -10,6 +10,8 @@ interface CallControlsProps {
   chatOpen: boolean;
   unreadCount: number;
   reactionOpen: boolean;
+  pictureInPictureSupported: boolean;
+  pictureInPictureActive: boolean;
   onToggleCamera: () => void;
   onToggleMicrophone: () => void;
   onToggleScreenShare: () => void;
@@ -17,6 +19,7 @@ interface CallControlsProps {
   onToggleReactions: () => void;
   onOpenSettings: () => void;
   onFullscreen: () => void;
+  onTogglePictureInPicture: () => void;
   onLeave: () => void;
 }
 
@@ -36,6 +39,7 @@ export function CallControls(props: CallControlsProps) {
       {moreOpen ? (
         <div className="more-menu">
           <button onClick={() => { props.onToggleScreenShare(); setMoreOpen(false); }}>{props.screenSharing ? <StopCircle size={17} /> : <MonitorUp size={17} />}{props.screenSharing ? "STOP SHARING" : "SHARE SCREEN"}</button>
+          {props.pictureInPictureSupported ? <button onClick={() => { props.onTogglePictureInPicture(); setMoreOpen(false); }}><PictureInPicture2 size={17} />{props.pictureInPictureActive ? "CLOSE MINI VIEW" : "MINI VIEW"}</button> : null}
           <button onClick={() => { props.onOpenSettings(); setMoreOpen(false); }}><Settings size={17} /> DEVICE SETTINGS</button>
           <button onClick={() => { props.onFullscreen(); setMoreOpen(false); }}><Expand size={17} /> FULLSCREEN</button>
         </div>
@@ -48,6 +52,7 @@ export function CallControls(props: CallControlsProps) {
         <ControlButton label="CHAT" active={props.chatOpen} badge={props.unreadCount} onClick={props.onToggleChat}><MessageSquare size={21} /></ControlButton>
         <ControlButton label="SETTINGS" onClick={props.onOpenSettings} secondary><Settings size={21} /></ControlButton>
         <ControlButton label="FULLSCREEN" onClick={props.onFullscreen} secondary><Expand size={21} /></ControlButton>
+        {props.pictureInPictureSupported ? <ControlButton label={props.pictureInPictureActive ? "CLOSE MINI" : "MINI VIEW"} active={props.pictureInPictureActive} onClick={props.onTogglePictureInPicture} secondary><PictureInPicture2 size={21} /></ControlButton> : null}
         <ControlButton label="MORE" active={moreOpen} onClick={() => setMoreOpen((value) => !value)}><MoreHorizontal size={21} /></ControlButton>
         <ControlButton label="END CALL" danger onClick={props.onLeave}><PhoneOff size={22} /></ControlButton>
       </nav>

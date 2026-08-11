@@ -17,6 +17,7 @@ import { ReactionPicker } from "@/components/reactions/ReactionPicker";
 import { RetroButton } from "@/components/ui/RetroButton";
 import { Toast } from "@/components/ui/Toast";
 import { useRealtime } from "@/hooks/useRealtime";
+import { usePictureInPicture } from "@/hooks/usePictureInPicture";
 
 function formatDuration(seconds: number) {
   const hours = Math.floor(seconds / 3_600).toString().padStart(2, "0");
@@ -38,6 +39,7 @@ export function CallRoom({ roomId, preferredSpeakerId, onLeave }: CallRoomProps)
   const { localParticipant, isCameraEnabled, isMicrophoneEnabled, isScreenShareEnabled } = useLocalParticipant();
   const screenShares = useTracks([Track.Source.ScreenShare]);
   const { messages, reactions, sendMessage, sendReaction } = useRealtime();
+  const { pictureInPictureSupported, pictureInPictureActive, togglePictureInPicture } = usePictureInPicture();
   const [chatOpen, setChatOpen] = useState(false);
   const [reactionOpen, setReactionOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -137,6 +139,14 @@ export function CallRoom({ roomId, preferredSpeakerId, onLeave }: CallRoomProps)
     }
   };
 
+  const toggleMiniView = async () => {
+    try {
+      await togglePictureInPicture();
+    } catch {
+      setToast({ message: "Mini view is unavailable. Start a video and allow picture-in-picture in browser settings.", tone: "error" });
+    }
+  };
+
   const connectionInterrupted = connectionState === ConnectionState.Reconnecting || connectionState === ConnectionState.SignalReconnecting;
 
   return (
@@ -163,6 +173,8 @@ export function CallRoom({ roomId, preferredSpeakerId, onLeave }: CallRoomProps)
           chatOpen={chatOpen}
           unreadCount={unreadCount}
           reactionOpen={reactionOpen}
+          pictureInPictureSupported={pictureInPictureSupported}
+          pictureInPictureActive={pictureInPictureActive}
           onToggleCamera={() => void toggleCamera()}
           onToggleMicrophone={() => void toggleMicrophone()}
           onToggleScreenShare={() => void toggleScreenShare()}
@@ -170,6 +182,7 @@ export function CallRoom({ roomId, preferredSpeakerId, onLeave }: CallRoomProps)
           onToggleReactions={() => setReactionOpen((value) => !value)}
           onOpenSettings={() => setSettingsOpen(true)}
           onFullscreen={() => void fullscreen()}
+          onTogglePictureInPicture={() => void toggleMiniView()}
           onLeave={() => void leave()}
         />
       </section>

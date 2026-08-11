@@ -134,6 +134,7 @@ The interface has dedicated layout adaptations for:
 - Screen/tab/window choices are controlled by the browser's native picker; the app cannot select a source for the user.
 - System/screen-share audio availability differs by browser and operating system. The call subscribes to it when LiveKit receives it.
 - Safari support for speaker/output selection is limited. The setting is hidden or explained when `setSinkId` is unavailable.
+- Mini view uses the browser/operating system Picture-in-Picture feature. Use **More → Mini View** before leaving the browser when automatic PiP is not permitted. Chrome can enter PiP automatically for eligible video-call sites; iOS Safari supports PiP, but iOS Home Screen PWAs and in-app webviews may reject it.
 - iOS browsers can restrict camera changes, background media, fullscreen, and screen sharing according to current WebKit policy.
 - Browser permission denial cannot be bypassed. The pre-join view disables unavailable media and allows a user to join with the remaining devices.
 - Clipboard access may be blocked outside a secure context or by browser policy; the UI reports copy failure.

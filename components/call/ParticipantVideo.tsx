@@ -20,7 +20,7 @@ export function ParticipantVideo({ participant, local = false, compact = false }
 
   return (
     <div className={`participant-video ${local ? "participant-video--local" : ""} ${compact ? "participant-video--compact" : ""} ${speaking ? "is-speaking" : ""}`}>
-      {hasVideo && cameraRef?.publication ? <VideoTrack trackRef={cameraRef} muted={local} className={local ? "is-mirrored" : ""} /> : (
+      {hasVideo && cameraRef?.publication ? <VideoTrack trackRef={cameraRef} muted={local} playsInline data-pip-priority={local ? "local" : compact ? "remote-compact" : "remote"} className={local ? "is-mirrored" : ""} /> : (
         <div className="participant-video__placeholder"><div>{initial}</div><span>{local ? "YOUR CAMERA IS OFF" : "CAMERA IS OFF"}</span></div>
       )}
       <div className="participant-video__label">
